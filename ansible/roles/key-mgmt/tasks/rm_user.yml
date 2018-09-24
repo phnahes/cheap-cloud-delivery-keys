@@ -1,0 +1,19 @@
+---
+- name: "[key-mgmt :: rm_user] Checking '{{ user }}' exists"
+  shell: getent password {{ user }}
+  ignore_errors: yes
+  register: user_already_deleted
+
+- name: "[key-mgmt :: rm_user] Removing the user '{{ rm_user }}'"
+  user:
+    name: '{{ rm_user }}'
+    state: absent
+    remove: yes
+  when: user_already_deleted.rc != 0
+
+
+- name: "[key-mgmt :: rm_user] Removing the group '{{ rm_user }}'"
+  group:
+    name: '{{ rm_user }}'
+    state: absent
+  when: user_already_deleted.rc != 0

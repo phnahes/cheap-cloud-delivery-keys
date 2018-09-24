@@ -1,0 +1,11 @@
+---
+user: 'alt-root'
+home_folder: "/home/alt-root"
+
+rm_user: 'ec2-user'
+
+obj_date: "{{ lookup('pipe', 'date +%Y/%-m') }}"
+bucket: "key-mgmt"
+region: "us-east-1"
+
+

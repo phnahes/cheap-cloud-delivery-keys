@@ -1,0 +1,15 @@
+---
+- shell: "/opt/aws/bin/ec2-metadata -i | sed  -e 's/instance-id: //g'"
+  register: instance
+
+- shell: "/opt/aws/bin/ec2-metadata -z | sed -e 's/.$//' -e 's/placement: //g'"
+  register: inst_region
+
+
+- name: "[key-mgmt :: ec2_tagging] Tagging EC2-Instance: {{ instance.stdout_lines[0] }} Region: {{ inst_region.stdout_lines[0] }} TAG: 'created_at' {{ obj_date }}"
+  ec2_tag:
+    region: "{{ inst_region.stdout_lines[0] }}"
+    resource: "{{ instance.stdout_lines[0] }}"
+    state: present
+    tags:
+      created_at: "{{ obj_date }}"

@@ -1,0 +1,50 @@
+---
+- name: "[key-mgmt :: user] Checking '{{ user }}' exists"
+  shell: getent passwd {{ user }}
+  ignore_errors: yes
+  register: user_exists
+
+- name: "[key-mgmt :: user] Ensure group '{{ user }}' exists"
+  group:
+    name: '{{ user }}'
+    gid: 66600
+    state: present
+  when: user_exists.rc != 0
+
+- name: "[key-mgmt :: user] Creating '{{ user }}'"
+  user:
+    name: '{{ user }}'
+    uid: 66600
+    group: '{{ user }}'
+    groups: wheel
+    shell: /bin/bash
+    create_home: yes
+    system: true
+    home: '{{ home_folder }}'
+    state: present
+  when: user_exists.rc != 0
+
+- name: "Permit {{ user }} on sudoers file"
+  lineinfile:
+    dest        : /etc/sudoers
+    state       : present
+    insertafter : EOF
+    line        : "%{{ user }} ALL=(ALL) NOPASSWD : ALL"
+
+- name: "[key-mgmt :: user] Creatin home directory '{{ home_folder }}'"
+  file:
+    path  : "{{ home_folder }}"
+    owner : '{{ user }}'
+    group : '{{ user }}'
+    mode  : 0755
+    state : directory
+  when: user_exists.rc != 0
+
+- name: "[key-mgmt :: user] Create .ssh directory '{{ home_folder }}/.ssh'"
+  file:
+    path  : "{{ home_folder }}/.ssh"
+    owner : '{{ user }}'
+    group : '{{ user }}'
+    mode  : 0700
+    state : directory
+  when: user_exists.rc != 0

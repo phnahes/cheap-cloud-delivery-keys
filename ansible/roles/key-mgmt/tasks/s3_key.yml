@@ -1,0 +1,24 @@
+---
+- name: "[key-mgmt :: s3_key] Check if the '{{ home_folder }}/.ssh/authorized_keys'"
+  shell: "/usr/bin/test -e {{ home_folder }}/.ssh/authorized_keys"
+  ignore_errors: yes
+  register: key
+
+- name: "[key-mgmt :: s3_key] Download PubKey from '{{ bucket }}/{{ obj_date }}/authorized_keys' para '{{ home_folder }}/.ssh/authorized_keys'"
+  aws_s3:
+    ignore_nonexistent_bucket: true
+    bucket: '{{ bucket }}'
+    object: "/{{ obj_date }}/authorized_keys"
+    dest: "{{ home_folder }}/.ssh/authorized_keys"
+    region: '{{ region }}'
+    mode: get
+  delegate_to: 127.0.0.1
+  when: key.rc != 0
+
+- name: "[key-mgmt :: s3_key] Fix permissions on '{{ home_folder }}/.ssh/authorized_keys'"
+  file:
+    path: '{{ home_folder }}/.ssh/authorized_keys'
+    owner: '{{ user }}'
+    group: '{{ user }}'
+    mode: 0400
+  when: key.rc != 0
