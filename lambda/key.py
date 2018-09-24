@@ -34,7 +34,7 @@ def lambda_handler(event, context):
     private_encoded_string = private.encode("utf-8")
     public_encoded_string = public.encode("utf-8")
 
-    bucket_name = "<BUCKET_NAME>"
+    bucket_name = "key-mgmt"
 
     priv_file_name = "priv.pem"
     public_file_name = "authorized_keys"
@@ -46,8 +46,8 @@ def lambda_handler(event, context):
     s3.Bucket(bucket_name).put_object(Key=public_s3_path, Body=public_encoded_string)
     s3.Bucket(bucket_name).put_object(Key=priv_s3_path, Body=private_encoded_string)
     
-    print(private)
-    print(public)
+    #print(private)
+    #print(public)
     
     return ()
 
