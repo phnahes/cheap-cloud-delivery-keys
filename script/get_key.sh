@@ -64,7 +64,7 @@ function usage() {
 function error() {
   echo
   echo "Erro ao validar opção"
-  echo "Uso: `basename $0` [ -8 <HORA:MINUTOS> | -9 <HORA:MINUTOS> | -h ]" >&2
+  echo "Uso: `basename $0` [ -u <usuario para acesso ssh ao jump server> | -a < conta ou nome do profile > | -r < regiao > | -i < IP da instancia > | -h ]" >&2
   echo
   exit 1
 }
