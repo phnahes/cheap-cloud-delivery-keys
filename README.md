@@ -70,29 +70,6 @@ In Cross Account access, use:
 ```
 
 
-### IAM Policy
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "Example",
-            "Effect": "Allow",
-            "Action": [
-                "s3:ListBucket",
-                "s3:GetObject"
-            ],
-            "Resource": [
-                "arn:aws:s3:::<BUCKET_NAME>",
-                "arn:aws:s3:::<BUCKET_NAME>/*"
-            ]
-        }
-    ]
-}
-```
-
-And Attach this IAM POlicy, on a IAM Role (used on Ec2 Instance)
-
 
 ### Attaching Policies
 
